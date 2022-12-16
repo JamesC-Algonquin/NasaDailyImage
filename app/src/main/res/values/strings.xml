@@ -20,7 +20,7 @@
     <string name="confirm">Delete Image?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="choose_date">Please Choose a date before trying to save an image.</string>
+    <string name="choose_date">Please choose a date before trying to save an image.</string>
     <string name="saved_help">This tab lists all the images you have saved. Press and hold an image to delete it.</string>
     <string name="about_help">About me and my app</string>
     <string name="aboutme">"This app was made by James Ching, for the Mobile GUI Development course, in 2022. "</string>
