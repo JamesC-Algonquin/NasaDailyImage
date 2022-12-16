@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NASAImageOfTheDay</string>
+    <string name="help">Aide</string>
+    <string name="galaxy">Galaxie</string>
+    <string name="open">Ouvrir</string>
+    <string name="close">Fermer</string>
+    <string name="daily">Image d\'Aujourd\'hui</string>
+    <string name="slide">Diaporama</string>
+    <string name="search">Cherchez Image</string>
+    <string name="save">Images Enregistrées</string>
+    <string name="info">Information</string>
+    <string name="about">À propos</string>
+    <string name="nasa">NASA</string>
+    <string name="daily_help">Cet onglet présente automatiquement l\'image d\'aujourd\'hui.</string>
+    <string name="ok">OK</string>
+    <string name="random_help">Sélectionne au hasard une image de la NASA du jour, de 1995 à aujourd\'hui. Appuyez sur le bouton pour démarrer ou mettre en pause la boucle. Une pause pendant une boucle entraînera la fin de la boucle avant la pause.</string>
+    <string name="button">Démarrer/Pause</string>
+    <string name="save_image">Enregistrér Image</string>
+    <string name="delete">Effacer</string>
+    <string name="confirm">Effacer Image?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="choose_date">Veuillez choisir une date avant d\'essayer d\'enregistrer une image.</string>
+    <string name="saved_help">Cet onglet répertorie toutes les images que vous avez enregistrées. Appuyez longuement sur une image pour la supprimer.</string>
+    <string name="about_help">À propos de moi et de mon application</string>
+    <string name="aboutme">Cette application a été réalisée par James Ching, pour le cours Mobile GUI Development, en 2022.</string>
+    <string name="search_help">Sélectionnez une date pour voir quelle image la NASA a publiée ce jour-là !</string>
+    <string name="message">J\'adore les commentaires. Envoyez-moi un message!</string>
+    <string name="send">Envoyer</string>
+</resources>

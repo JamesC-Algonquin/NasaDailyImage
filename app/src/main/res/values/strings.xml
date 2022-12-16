@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">NASAImageOfTheDay</string>
+    <string name="help">Help</string>
+    <string name="galaxy">Galaxy</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="daily">Today\'s Image</string>
+    <string name="slide">Slideshow</string>
+    <string name="search">Search Image</string>
+    <string name="save">Saved Images</string>
+    <string name="info">Information</string>
+    <string name="about">About</string>
+    <string name="nasa">NASA</string>
+    <string name="daily_help">This tab automatically presents the image of today.</string>
+    <string name="ok">OK</string>
+    <string name="random_help">Randomly selects a NASA Image of the Day, from 1995 to Today. Press the button to start or pause the loop. Pausing during a loop will cause the loop to finish before pausing.</string>
+    <string name="button">Start/Pause</string>
+    <string name="save_image">Save Image</string>
+    <string name="delete">Delete</string>
+    <string name="confirm">Delete Image?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="choose_date">Please Choose a date before trying to save an image.</string>
+    <string name="saved_help">This tab lists all the images you have saved. Press and hold an image to delete it.</string>
+    <string name="about_help">About me and my app</string>
+    <string name="aboutme">"This app was made by James Ching, for the Mobile GUI Development course, in 2022. "</string>
+    <string name="search_help">Select a date to see what image NASA posted on that day!</string>
+    <string name="message">I love feedback. Send me a message!</string>
+    <string name="send">Send</string>
+</resources>

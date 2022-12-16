@@ -1,0 +1,67 @@
+package com.example.nasadailyimage;
+
+import android.content.Context;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+public class ListAdapter extends BaseAdapter {
+
+    protected ArrayList<SavedImage> imageList = new ArrayList<>();
+    private final Context main;
+
+    public ListAdapter (Context m){
+        main = m;
+    }
+
+    public void addList(SavedImage save){
+        imageList.add(save);
+    }
+
+    public void deleteFromList(int pos){
+        imageList.remove(pos);
+    }
+
+    @Override
+    public int getCount() {
+        return imageList.size();
+    }
+
+    @Override
+    public SavedImage getItem(int i) {
+        return imageList.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        View localView = view;
+
+        if (localView == null){
+            localView = LayoutInflater.from(main).inflate(R.layout.list_layout, viewGroup, false);
+        }
+        SavedImage save = imageList.get(i);
+        TextView date = localView.findViewById(R.id.date);
+        ImageView image = localView.findViewById(R.id.image);
+        TextView url = localView.findViewById(R.id.url);
+
+        date.setText(save.getDate());
+        image.setImageBitmap(save.getImage());
+        url.setText(
+                Html.fromHtml("<a href=\""
+                + save.getUrlHD()
+                + "\">"+ save.getUrlHD() +"</a> "));
+
+        return localView;
+    }
+}
