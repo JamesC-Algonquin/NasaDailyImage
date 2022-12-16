@@ -1,30 +1,22 @@
 package com.example.nasadailyimage;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import androidx.fragment.app.Fragment;
 
-
+/**
+ * Fragment for search image activity
+ * Allows for easy orientation re-organizing
+ * Contains date label, image, and hyperlink
+ */
 public class SearchFragment extends Fragment {
-
 
     Bundle activityData;
 
@@ -32,6 +24,13 @@ public class SearchFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Inflates the fragmentLayout
+     * @param inflater inflater
+     * @param container container
+     * @param savedInstanceState savedInstanceState
+     * @return Return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

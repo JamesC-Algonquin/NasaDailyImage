@@ -23,6 +23,13 @@ import android.widget.EditText;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+/**
+ * Simple Text-based activity, with a short description of the author
+ * Includes Toolbar and Nav Menu logic
+ * Edit Text can be use to send email to author
+ *
+ * @author James Ching
+ */
 public class About extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
@@ -45,6 +52,7 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
 
         EditText edit = findViewById(R.id.message);
 
+        //Set to saved edit text data
         SharedPreferences prefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
         String messaged = prefs.getString("message", "");
         if (!(messaged.equals(""))){
@@ -52,17 +60,19 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         }
 
         Button send = findViewById(R.id.send);
-
         send.setOnClickListener(click -> {
 
+            //Get Edit text data
             String message = edit.toString();
 
+            //Build Email intent
             Intent email = new Intent(Intent.ACTION_SEND);
             email.setDataAndType(Uri.parse("mailto:"), "text/plain");
             email.putExtra(Intent.EXTRA_EMAIL, "junkmailnin@gmail.com");
             email.putExtra(Intent.EXTRA_SUBJECT, "A Message");
             email.putExtra(Intent.EXTRA_TEXT, message);
 
+            //Attempt email send, snackbar confirms success or failure
             try {
                 startActivity(Intent.createChooser(email, "Send mail..."));
                 Snackbar.make(send, "Message Sent!", Snackbar.LENGTH_LONG).show();
@@ -74,6 +84,10 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         });
     }
 
+    /**
+     * onPause method saves the edit text  data for the
+     * next time it is opened.
+     */
     protected void onPause(){
         super.onPause();
         SharedPreferences prefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
@@ -83,6 +97,10 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         edit.apply();
     }
 
+    /**Inflates Toolbar
+     * @param menu Menu to inflate
+     * @return Return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -91,6 +109,11 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         return true;
     }
 
+    /**
+     * Determines what to do when a button is pressed
+     * @param item Menu Item Selected
+     * @return Return
+     */
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //Help Menu is the only button. Set to Alert Dialog help menu.
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -104,6 +127,13 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         return true;
     }
 
+
+    /**
+     * Determines what to do when a
+     * navigation button is pressed
+     * @param item Menu Item Selected
+     * @return Return
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

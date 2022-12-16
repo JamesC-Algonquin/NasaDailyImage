@@ -6,6 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+/**
+ * SQLite Database class, for image data storage
+ *
+ * @author James Ching
+ */
 public class ImageDB extends SQLiteOpenHelper {
 
     protected final static String dbName = "Image";
@@ -20,6 +25,11 @@ public class ImageDB extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
+    /**
+     * Code to be run when database is created
+     *
+     * @param db Database to manipulate
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + tableName

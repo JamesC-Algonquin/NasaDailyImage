@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,6 +35,15 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Main Activity
+ * Automatically loads the image based on current date
+ * Displays description of image
+ *
+ * Includes Nav menu and Toolbar
+ *
+ * @author James Ching
+ */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
 
@@ -75,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dailyImage.execute(url);
     }
 
+    /**Inflates Toolbar
+     * @param menu Menu to inflate
+     * @return Return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu items for use in the action bar
@@ -83,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /**
+     * Determines what to do when a button is pressed
+     * @param item Menu Item Selected
+     * @return Return
+     */
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //Help Menu is the only button. Set to Alert Dialog help menu.
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -96,6 +112,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /**
+     * Determines what to do when a
+     * navigation button is pressed
+     * @param item Menu Item Selected
+     * @return Return
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -128,6 +150,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
+    /**
+     * Does http request work on separate thread
+     * Loads image and data from NASA API
+     */
     @SuppressLint("StaticFieldLeak")
     private class DailyImage extends AsyncTask<String, Integer, String> {
 

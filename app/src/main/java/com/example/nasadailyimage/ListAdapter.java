@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapts List of Images with Urls to ListView
+ * @author James Ching
+ */
 public class ListAdapter extends BaseAdapter {
 
     protected ArrayList<SavedImage> imageList = new ArrayList<>();
@@ -50,13 +54,16 @@ public class ListAdapter extends BaseAdapter {
         if (localView == null){
             localView = LayoutInflater.from(main).inflate(R.layout.list_layout, viewGroup, false);
         }
+        //Get View
         SavedImage save = imageList.get(i);
         TextView date = localView.findViewById(R.id.date);
         ImageView image = localView.findViewById(R.id.image);
         TextView url = localView.findViewById(R.id.url);
 
+        //Set view text/image
         date.setText(save.getDate());
         image.setImageBitmap(save.getImage());
+        //Special hyperlink format
         url.setText(
                 Html.fromHtml("<a href=\""
                 + save.getUrlHD()

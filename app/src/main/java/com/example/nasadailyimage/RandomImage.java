@@ -36,9 +36,15 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Selects random date from 1995 to now
+ * loops through many images until stopped
+ *
+ * @author James Ching
+ */
 public class RandomImage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-
+    //initially not running
     boolean running = false;
 
     @Override
@@ -46,27 +52,28 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_image);
 
+        //set Toolbar
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
+        //set Nav drawer
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, myToolbar, R.string.open, R.string.close);
-
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         String url = "https://api.nasa.gov/planetary/apod?api_key=WvdfUPArMX2zKJws6qwTEU3qoORfZsXCAUITxHUE&date=";
-
+        //Set button event
         Button button = findViewById(R.id.start_button);
-
         button.setOnClickListener(click -> {
+            //Button changes state of loop
             running = !running;
             DailyImage dailyImage = new DailyImage();
 
+            //start loop if true
             if(running) {
                 dailyImage.execute(url);
             }
@@ -74,6 +81,10 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+    /**Inflates Toolbar
+     * @param menu Menu to inflate
+     * @return Return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -82,6 +93,11 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    /**
+     * Determines what to do when a button is pressed
+     * @param item Menu Item Selected
+     * @return Return
+     */
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //Help Menu is the only button. Set to Alert Dialog help menu.
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -95,6 +111,12 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    /**
+     * Determines what to do when a
+     * navigation button is pressed
+     * @param item Menu Item Selected
+     * @return Return
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -127,6 +149,11 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
         return false;
     }
 
+    /**
+     * Does http request work on separate thread
+     * Loads image and data from NASA API
+     * Repeats as long as Running is true
+     */
     @SuppressLint("StaticFieldLeak")
     private class DailyImage extends AsyncTask<String, Integer, String> {
 

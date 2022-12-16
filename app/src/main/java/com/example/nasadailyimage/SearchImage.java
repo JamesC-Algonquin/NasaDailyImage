@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,6 +39,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Select a date to get the corresponding NASA image of the Day
+ * Save the image to see it in the saved images activity
+ *
+ * @author James Ching
+ */
 public class SearchImage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Bitmap image;
@@ -102,7 +107,7 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
                 cValues.put(ImageDB.colUrl, urlSD);
                 cValues.put(ImageDB.colUrlHD, urlHD);
                 cValues.put(ImageDB.colExplain, text);
-                long id = db.insert(ImageDB.tableName, null, cValues);
+                db.insert(ImageDB.tableName, null, cValues);
                 Log.d("saved to db.", "saved to db");
 
                 //Save image to device
@@ -123,16 +128,24 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+    /**
+     * Hopefully a fix for Transaction Too Large Exception
+     * Delete old instance states before changing activity
+     * @param oldInstanceState The old instance state of the activity
+     */
     @Override
-    protected void onSaveInstanceState(Bundle oldInstanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle oldInstanceState) {
         //Hopefully Fixes the Transaction too large exception
         super.onSaveInstanceState(oldInstanceState);
-        if (oldInstanceState != null) {
-            oldInstanceState.clear();
-        }
+        oldInstanceState.clear();
+
 
     }
 
+    /**Inflates Toolbar
+     * @param menu Menu to inflate
+     * @return Return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -141,6 +154,11 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    /**
+     * Determines what to do when a button is pressed
+     * @param item Menu Item Selected
+     * @return return
+     */
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //Help Menu is the only button. Set to Alert Dialog help menu.
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -154,6 +172,12 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    /**
+     * Determines what to do when a
+     * navigation button is pressed
+     * @param item Menu Item Selected
+     * @return return
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -186,6 +210,10 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
         return false;
     }
 
+    /**
+     * Does http request work on separate thread
+     * Loads image and data from NASA API
+     */
     @SuppressLint("StaticFieldLeak")
     private class DailyImage extends AsyncTask<String, Integer, String> {
 

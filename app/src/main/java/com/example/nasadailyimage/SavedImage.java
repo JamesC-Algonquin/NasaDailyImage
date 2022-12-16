@@ -2,6 +2,12 @@ package com.example.nasadailyimage;
 
 import android.graphics.Bitmap;
 
+/**
+ * Object for storing image data
+ * Contains only getters; no need for setters
+ *
+ * @author James Ching
+ */
 public class SavedImage {
 
     long id;
@@ -11,6 +17,7 @@ public class SavedImage {
     String urlHD;
     String explanation;
 
+    //constructor
     public SavedImage(long id, String d, Bitmap i, String u, String hd, String e){
         this.id = id;
         date = d;
@@ -19,6 +26,9 @@ public class SavedImage {
         urlHD = hd;
         explanation = e;
     }
+
+    //Getters
+
     public long getID(){
         return id;
     }

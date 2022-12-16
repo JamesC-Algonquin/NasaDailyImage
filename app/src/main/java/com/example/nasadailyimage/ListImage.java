@@ -24,6 +24,11 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 
+/**
+ * Activity Displays all Saved Images from Image Search
+ *
+ * @author James Ching
+ */
 public class ListImage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
@@ -46,6 +51,13 @@ public class ListImage extends AppCompatActivity implements NavigationView.OnNav
         inflateList();
     }
 
+    /**
+     * inflates the list from Database entries
+     * Images are stored in files
+     *
+     * Delete entries by long press on list
+     *
+     */
    public void inflateList(){
        //Get List View and set adapter
        ListAdapter myListAdapter;
@@ -125,12 +137,19 @@ public class ListImage extends AppCompatActivity implements NavigationView.OnNav
 
    }
 
+    /**
+     * Reinflates list after activity is resumed
+     */
    public void onResume() {
        super.onResume();
        //Wipes List and repopulates based on new data
        inflateList();
    }
 
+    /**Inflates Toolbar
+     * @param menu Menu to inflate
+     * @return Return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -139,6 +158,11 @@ public class ListImage extends AppCompatActivity implements NavigationView.OnNav
         return true;
     }
 
+    /**
+     * Determines what to do when a button is pressed
+     * @param item Menu Item Selected
+     * @return Return
+     */
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //Help Menu is the only button. Set to Alert Dialog help menu.
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -152,6 +176,13 @@ public class ListImage extends AppCompatActivity implements NavigationView.OnNav
         return true;
     }
 
+
+    /**
+     * Determines what to do when a
+     * navigation button is pressed
+     * @param item Menu Item Selected
+     * @return Return
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
