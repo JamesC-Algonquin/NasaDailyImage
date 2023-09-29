@@ -124,27 +124,21 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawer(GravityCompat.START);
 
-        switch(item.getItemId()) {
-            case R.id.daily:
-                Intent main = new Intent(this, MainActivity.class);
-                startActivity(main);
-                break;
-            case R.id.random:
-                //Intent random = new Intent(this, );
-                //startActivity(random);
-                break;
-            case R.id.search:
-                Intent search = new Intent(this, SearchImage.class);
-                startActivity(search);
-                break;
-            case R.id.saved:
-                Intent saved = new Intent(this, ListImage.class);
-                startActivity(saved);
-                break;
-            case R.id.about:
-                Intent about = new Intent(this, About.class);
-                startActivity(about);
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.daily) {
+            Intent main = new Intent(this, MainActivity.class);
+            startActivity(main);
+        } else if (itemId == R.id.random) {//Intent random = new Intent(this, );
+            //startActivity(random);
+        } else if (itemId == R.id.search) {
+            Intent search = new Intent(this, SearchImage.class);
+            startActivity(search);
+        } else if (itemId == R.id.saved) {
+            Intent saved = new Intent(this, ListImage.class);
+            startActivity(saved);
+        } else if (itemId == R.id.about) {
+            Intent about = new Intent(this, About.class);
+            startActivity(about);
         }
         return false;
     }

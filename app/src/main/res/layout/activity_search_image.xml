@@ -28,12 +28,14 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="top|center">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search"
                 android:textSize="20sp"
+                android:layout_gravity="center"
                 />
 
             <DatePicker
@@ -42,12 +44,14 @@
                 android:layout_height="wrap_content"
                 android:datePickerMode="spinner"
                 android:calendarViewShown="false"
+                android:layout_gravity="center"
                 />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
                 <Button
                     android:id="@+id/search_button"
                     android:layout_width="wrap_content"
@@ -66,7 +70,8 @@
             <FrameLayout
                 android:id="@+id/FrameLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
         </LinearLayout>
         </ScrollView>
 

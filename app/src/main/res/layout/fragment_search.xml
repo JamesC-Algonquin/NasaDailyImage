@@ -7,7 +7,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="top|center">
 
         <TextView
         android:id="@+id/searchDate"
@@ -15,24 +16,28 @@
         android:layout_height="wrap_content"
         android:textSize="18dp"
         android:padding="10dp"
+        android:layout_gravity="center"
         />
 
     <ImageView
         android:id="@+id/searchImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         />
 
     <TextView
         android:id="@+id/searchDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         />
 
     <TextView
         android:id="@+id/url_hd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         />
 
 </LinearLayout>
