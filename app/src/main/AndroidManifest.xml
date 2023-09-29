@@ -17,7 +17,8 @@
         <activity
             android:name=".About"
             android:exported="false"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation = "portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -25,7 +26,8 @@
         <activity
             android:name=".ListImage"
             android:exported="false"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation = "portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -33,7 +35,8 @@
         <activity
             android:name=".SearchImage"
             android:exported="false"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation = "portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -41,7 +44,8 @@
         <activity
             android:name=".RandomImage"
             android:exported="false"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation = "portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -49,7 +53,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation = "portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

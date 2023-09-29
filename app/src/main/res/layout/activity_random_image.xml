@@ -20,22 +20,29 @@
         android:layout_height="match_parent"
         tools:openDrawer="start">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/slide"
                 android:textSize="20sp"
+                android:layout_gravity="center"
                 />
 
             <ImageView
                 android:id="@+id/dailyImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/nasa" />
+                android:contentDescription="@string/nasa"
+                android:layout_gravity="center"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -48,8 +55,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
+        </ScrollView>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
