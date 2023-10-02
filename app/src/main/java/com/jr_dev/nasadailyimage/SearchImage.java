@@ -1,4 +1,4 @@
-package com.example.nasadailyimage;
+package com.jr_dev.nasadailyimage;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -193,7 +193,6 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
         } else if (itemId == R.id.random) {
             Intent random = new Intent(this, RandomImage.class);
             startActivity(random);
-        } else if (itemId == R.id.search) {
         } else if (itemId == R.id.saved) {
             Intent saved = new Intent(this, ListImage.class);
             startActivity(saved);

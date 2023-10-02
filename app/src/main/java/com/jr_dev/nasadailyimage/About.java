@@ -1,4 +1,4 @@
-package com.example.nasadailyimage;
+package com.jr_dev.nasadailyimage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -55,7 +55,7 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         //Set to saved edit text data
         SharedPreferences prefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
         String messaged = prefs.getString("message", "");
-        if (!(messaged.equals(""))){
+        if (messaged != null && !(messaged.equals(""))){
             edit.setText(messaged);
         }
 
@@ -155,7 +155,6 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         } else if (itemId == R.id.saved) {
             Intent saved = new Intent(this, ListImage.class);
             startActivity(saved);
-        } else if (itemId == R.id.about) {
         }
         return false;
     }

@@ -1,4 +1,4 @@
-package com.example.nasadailyimage;
+package com.jr_dev.nasadailyimage;
 
 import android.content.Context;
 import android.text.Html;
@@ -67,7 +67,7 @@ public class ListAdapter extends BaseAdapter {
         url.setText(
                 Html.fromHtml("<a href=\""
                 + save.getUrlHD()
-                + "\">"+ save.getUrlHD() +"</a> "));
+                + "\">"+ save.getUrlHD() +"</a> ", Html.FROM_HTML_MODE_LEGACY));
 
         return localView;
     }

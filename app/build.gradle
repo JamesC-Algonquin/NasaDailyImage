@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.nasadailyimage'
+    namespace 'com.jr_dev.nasadailyimage'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.nasadailyimage"
+        applicationId "com.jr_dev.nasadailyimage"
         minSdk 28
         targetSdk 32
         versionCode 1

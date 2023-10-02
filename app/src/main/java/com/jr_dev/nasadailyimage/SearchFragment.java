@@ -1,4 +1,4 @@
-package com.example.nasadailyimage;
+package com.jr_dev.nasadailyimage;
 
 import android.os.Bundle;
 import android.text.Html;
@@ -53,7 +53,7 @@ public class SearchFragment extends Fragment {
         urlHD.setText(
                 Html.fromHtml("<a href=\""
                 + activityData.getString("hdurl")
-                + "\">" + activityData.getString("hdurl") + "</a> "));
+                + "\">" + activityData.getString("hdurl") + "</a> ", Html.FROM_HTML_MODE_LEGACY));
 
         //Make TextView a clickable Link
         urlHD.setMovementMethod(LinkMovementMethod.getInstance());

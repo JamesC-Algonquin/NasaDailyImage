@@ -1,4 +1,4 @@
-package com.example.nasadailyimage;
+package com.jr_dev.nasadailyimage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -52,9 +52,8 @@ public class ListImage extends AppCompatActivity implements NavigationView.OnNav
     }
 
     /**
-     * inflates the list from Database entries
+     * Inflates the list from Database entries
      * Images are stored in files
-     *
      * Delete entries by long press on list
      *
      */
@@ -201,7 +200,6 @@ public class ListImage extends AppCompatActivity implements NavigationView.OnNav
         } else if (itemId == R.id.search) {
             Intent search = new Intent(this, SearchImage.class);
             startActivity(search);
-        } else if (itemId == R.id.saved) {
         } else if (itemId == R.id.about) {
             Intent about = new Intent(this, About.class);
             startActivity(about);
