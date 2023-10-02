@@ -14,9 +14,10 @@
         android:id="@+id/searchDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:padding="10dp"
         android:layout_gravity="center"
+        android:textAlignment="center"
         />
 
     <ImageView
@@ -31,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textAlignment="center"
         />
 
     <TextView
@@ -38,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textAlignment="center"
         />
 
 </LinearLayout>
