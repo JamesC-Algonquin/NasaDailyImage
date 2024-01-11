@@ -1,14 +1,14 @@
 package com.jr_dev.nasadailyimage;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +38,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Select a date to get the corresponding NASA image of the Day
@@ -73,29 +75,102 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
 
         //Search Button sends date chosen to AsyncTask with URL
         Button button = findViewById(R.id.search_button);
-        button.setOnClickListener(click -> {
-
-            //Get Date from DatePicker as yyyy-mm-dd
-            DatePicker datePicker = findViewById(R.id.date);
-            String date = datePicker.getYear() + "-" + (datePicker.getMonth()+1) + "-" + datePicker.getDayOfMonth();
-
-            //Append date to NASA image API URL
-            String url = "https://api.nasa.gov/planetary/apod?api_key=WvdfUPArMX2zKJws6qwTEU3qoORfZsXCAUITxHUE&date=";
-            url = url + date;
-            Log.d("url", url);
-
-            //Send URL to Web query thread
-            DailyImage dailyImage = new DailyImage();
-            dailyImage.execute(url);
-        });
+        button.setOnClickListener(click -> prepareUrl());
 
         //Set Save button to populate list adapter array
         Button button2 = findViewById(R.id.save_button);
-        button2.setOnClickListener(click -> {
+        button2.setOnClickListener(click -> saveImage());
 
-            if(date == null){
-                Toast.makeText(this, getResources().getString(R.string.choose_date), Toast.LENGTH_SHORT).show();
-            }else {
+    }
+
+    /**
+     * Prepare Url for Query
+     */
+    public void prepareUrl(){
+        //Get Date from DatePicker as yyyy-mm-dd
+        DatePicker datePicker = findViewById(R.id.date);
+        String date = datePicker.getYear() + "-" + (datePicker.getMonth()+1) + "-" + datePicker.getDayOfMonth();
+
+        //Append date to NASA image API URL
+        String url = "https://api.nasa.gov/planetary/apod?api_key=WvdfUPArMX2zKJws6qwTEU3qoORfZsXCAUITxHUE&date=";
+        url = url + date;
+        Log.d("url", url);
+
+        //Send URL to Web query thread
+        urlQuery(url);
+    }
+
+    /**
+     * Queries NASA API on new thread
+     * Updates GUI Thread upon successful query
+     * @param u URL to be queried
+     */
+    public void urlQuery(String u){
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        executorService.execute(() -> {
+            try {
+                //Get URL from UI thread, open connection
+                URL url = new URL(u);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                //Get input from Web response
+                InputStream response = urlConnection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(response, StandardCharsets.UTF_8), 8);
+
+                //Build String from Web Response
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                String result = sb.toString();
+
+                //Build JSON object from returned string object
+                JSONObject nasaJSON = new JSONObject(result);
+                URL imageURL = new URL(nasaJSON.getString("url"));
+
+                //Get image url, date and description string from JSON object, create Bitmap from image url web response
+                image = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                text = nasaJSON.getString("explanation");
+                date = nasaJSON.getString("date");
+                urlSD = nasaJSON.getString("url");
+                urlHD = nasaJSON.getString("hdurl");
+
+                //Send to UI thread
+                handler.post(() -> {
+
+                    Bundle activityData = new Bundle();
+                    activityData.putString("date", date);
+                    activityData.putParcelable("image", image);
+                    activityData.putString("details", text);
+                    activityData.putString("url", urlSD);
+                    activityData.putString("hdurl", urlHD);
+
+                    SearchFragment searchFragment = new SearchFragment();
+                    searchFragment.setArguments(activityData);
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, searchFragment).commit();
+                });
+
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
+
+    /**
+     * saves selected image to SQLite DB
+     */
+    public void saveImage(){
+        if(date == null){
+            Toast.makeText(this, getResources().getString(R.string.choose_date), Toast.LENGTH_SHORT).show();
+        }else {
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(() -> {
 
                 ImageDB dbHelper = new ImageDB(this, ImageDB.dbName, null, ImageDB.dbVersion);
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -121,11 +196,8 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-
-        });
-
-
+            });
+        }
     }
 
     /**
@@ -202,67 +274,5 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
         return false;
     }
 
-    /**
-     * Does http request work on separate thread
-     * Loads image and data from NASA API
-     */
-    @SuppressLint("StaticFieldLeak")
-    private class DailyImage extends AsyncTask<String, Integer, String> {
 
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try {
-                //Get URL from UI thread, open connection
-                URL url = new URL(strings[0]);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                //Get input from Web response
-                InputStream response = urlConnection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(response, StandardCharsets.UTF_8), 8);
-
-                //Build String from Web Response
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-                String result = sb.toString();
-
-                //Build JSON object from returned string object
-                JSONObject nasaJSON = new JSONObject(result);
-                URL imageURL = new URL(nasaJSON.getString("url"));
-
-                //Get image url, date and description string from JSON object, create Bitmap from image url web response
-                image = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-                text = nasaJSON.getString("explanation");
-                date = nasaJSON.getString("date");
-                urlSD = nasaJSON.getString("url");
-                urlHD = nasaJSON.getString("hdurl");
-
-                //Send to UI thread
-                publishProgress(1);
-
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        public void onProgressUpdate(Integer... args) {
-
-            Bundle activityData = new Bundle();
-            activityData.putString("date", date);
-            activityData.putParcelable("image", image);
-            activityData.putString("details", text);
-            activityData.putString("url", urlSD);
-            activityData.putString("hdurl", urlHD);
-
-            SearchFragment searchFragment = new SearchFragment();
-            searchFragment.setArguments(activityData);
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.FrameLayout, searchFragment).commit();
-        }
-    }
 }
