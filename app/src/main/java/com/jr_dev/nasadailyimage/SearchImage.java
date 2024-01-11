@@ -178,7 +178,6 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
      * @param item Menu Item Selected
      * @return return
      */
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 

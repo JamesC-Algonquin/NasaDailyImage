@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param item Menu Item Selected
      * @return Return
      */
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
