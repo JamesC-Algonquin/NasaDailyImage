@@ -4,8 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +35,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Main Activity
@@ -64,6 +67,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Automatically begin URL query
+        prepareUrl();
+    }
+
+    /**
+     * Uses current date to prepare URL Query to NASA API
+     *
+     */
+    public void prepareUrl(){
         //Get current date, format
         Date date = new Date();
         String format = "yyyy-MM-dd";
@@ -71,14 +83,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         String currentDate = dateFormat.format(date);
 
-
         //Append date to NASA image API URL
         String url = "https://api.nasa.gov/planetary/apod?api_key=WvdfUPArMX2zKJws6qwTEU3qoORfZsXCAUITxHUE&date=";
         url = url + currentDate;
 
         //Send URL to Web query thread
-        DailyImage dailyImage = new DailyImage();
-        dailyImage.execute(url);
+        urlQuery(url);
+    }
+
+    /**
+     * Queries NASA API on new thread
+     * Updates GUI Thread upon successful query
+     * @param u URL to be queried
+     */
+    public void urlQuery(String u){
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+
+            try {
+                //Get URL from UI thread, open connection
+                URL url = new URL(u);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                //Get input from Web response
+                InputStream response = urlConnection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(response, StandardCharsets.UTF_8), 8);
+
+                //Build String from Web Response
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                String result = sb.toString();
+
+                //Build JSON object from returned string object
+                JSONObject nasaJSON = new JSONObject(result);
+                URL imageURL = new URL(nasaJSON.getString("url"));
+
+                //Get image url and description string from JSON object, create Bitmap from image url web response
+                Bitmap image = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                String text = nasaJSON.getString("explanation");
+
+                handler.post(() -> {
+                    //Set UI image to bitmap from AsyncTask
+                    ImageView imageView = findViewById(R.id.dailyImage);
+                    imageView.setImageBitmap(image);
+                    //Set description to text from JSON Object
+                    TextView textView = findViewById(R.id.description);
+                    textView.setText(text);
+                });
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**Inflates Toolbar
@@ -141,63 +201,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    /**
-     * Does http request work on separate thread
-     * Loads image and data from NASA API
-     */
-    @SuppressLint("StaticFieldLeak")
-    private class DailyImage extends AsyncTask<String, Integer, String> {
-
-        Bitmap image;
-        String text;
-        ImageView imageView;
-        TextView textView;
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try {
-                //Get URL from UI thread, open connection
-                URL url = new URL(strings[0]);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                //Get input from Web response
-                InputStream response = urlConnection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(response, StandardCharsets.UTF_8), 8);
-
-                //Build String from Web Response
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-                String result = sb.toString();
-
-                //Build JSON object from returned string object
-                JSONObject nasaJSON = new JSONObject(result);
-                URL imageURL = new URL(nasaJSON.getString("url"));
-
-                //Get image url and description string from JSON object, create Bitmap from image url web response
-                image = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-                text = nasaJSON.getString("explanation");
-
-                //Send to UI thread
-                publishProgress(1);
-
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        public void onProgressUpdate(Integer... args) {
-            //Set UI image to bitmap from AsyncTask
-            imageView = findViewById(R.id.dailyImage);
-            imageView.setImageBitmap(image);
-            //Set description to text from JSON Object
-            textView = findViewById(R.id.description);
-            textView.setText(text);
-
-        }
-    }
 }
