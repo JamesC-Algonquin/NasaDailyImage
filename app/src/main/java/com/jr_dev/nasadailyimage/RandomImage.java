@@ -1,11 +1,11 @@
 package com.jr_dev.nasadailyimage;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +34,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -46,6 +48,8 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
 {
     //initially not running
     boolean running = false;
+    //ExecutorService is instantiated outside method due to recursive calling
+    ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +69,82 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        String url = "https://api.nasa.gov/planetary/apod?api_key=WvdfUPArMX2zKJws6qwTEU3qoORfZsXCAUITxHUE&date=";
         //Set button event
         Button button = findViewById(R.id.start_button);
         button.setOnClickListener(click -> {
-            //Button changes state of loop
             running = !running;
-            DailyImage dailyImage = new DailyImage();
+            if (running) {
+                randomQuery();
+            }
+        });
 
-            //start loop if true
-            if(running) {
-                dailyImage.execute(url);
+    }
+
+    /**
+     * Randomly picks date to append to url query
+     * calls recursively as long as "running" is true
+     */
+    public void randomQuery(){
+
+        ImageView imageView = findViewById(R.id.dailyImage);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+            try {
+                //Get URL pattern
+                String sURL = "https://api.nasa.gov/planetary/apod?api_key=WvdfUPArMX2zKJws6qwTEU3qoORfZsXCAUITxHUE&date=";
+
+                //Generate Random Date for NASA API
+                LocalDate startDate = LocalDate.of(1995, 7, 1); //start date
+                long start = startDate.toEpochDay();
+                LocalDate endDate = LocalDate.now(); //end date
+                long end = endDate.toEpochDay();
+                long randomEpochDay = ThreadLocalRandom.current().nextLong(start, end); //random date between start and end
+
+                //Append date to URL
+                sURL = sURL + LocalDate.ofEpochDay(randomEpochDay);
+
+                URL url = new URL(sURL);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream response = urlConnection.getInputStream();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(response, StandardCharsets.UTF_8), 8);
+                StringBuilder sb = new StringBuilder();
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                String result = sb.toString();
+
+                JSONObject nasaJSON = new JSONObject(result);
+                URL imageURL = new URL(nasaJSON.getString("url"));
+
+                Bitmap image = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+
+                handler.post(() -> imageView.setImageBitmap(image));
+
+                Runnable runnable = (() -> {
+                    int progress = progressBar.getProgress() + 1;
+                    progressBar.setProgress(progress);
+
+                    if (progressBar.getProgress() == 100){
+                        progressBar.setProgress(0);
+                        if (running) {
+                            randomQuery();
+                        }
+                    }
+                });
+
+                for (int i=1; i<=100; i++){
+                    handler.post(runnable);
+                    Thread.sleep(30);
+                }
+
+            } catch (IOException | JSONException | InterruptedException e) {
+                e.printStackTrace();
             }
         });
 
@@ -140,84 +209,4 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
         return false;
     }
 
-    /**
-     * Does http request work on separate thread
-     * Loads image and data from NASA API
-     * Repeats as long as Running is true
-     */
-    @SuppressLint("StaticFieldLeak")
-    private class DailyImage extends AsyncTask<String, Integer, String> {
-
-        Bitmap image ;
-        ImageView imageView = findViewById(R.id.dailyImage);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
-
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            while(running) {
-
-                try {
-                    //Get URL pattern
-                    String sURL = strings[0];
-
-                    //Generate Random Date for NASA API
-                    LocalDate startDate = LocalDate.of(1995, 7, 1); //start date
-                    long start = startDate.toEpochDay();
-                    LocalDate endDate = LocalDate.now(); //end date
-                    long end = endDate.toEpochDay();
-                    long randomEpochDay = ThreadLocalRandom.current().nextLong(start, end); //random date between start and end
-
-                    //Append date to URL
-                    sURL = sURL + LocalDate.ofEpochDay(randomEpochDay);
-
-                    URL url = new URL(sURL);
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                    InputStream response = urlConnection.getInputStream();
-
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(response, StandardCharsets.UTF_8), 8);
-                    StringBuilder sb = new StringBuilder();
-
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line).append("\n");
-                    }
-                    String result = sb.toString();
-
-                    JSONObject nasaJSON = new JSONObject(result);
-                    URL imageURL = new URL(nasaJSON.getString("url"));
-
-                    image = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-                    publishProgress(200);
-
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-
-                for (int i = 0; i < 100; i++) {
-                    try {
-                        publishProgress(i);
-                        Thread.sleep(30);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return null;
-        }
-
-        public void onProgressUpdate(Integer... args) {
-
-            if (args[0] == 200) {
-                imageView.setImageBitmap(image);
-            }
-            else{
-                progressBar.setProgress(args[0]);
-            }
-
-
-        }
-    }
 }
