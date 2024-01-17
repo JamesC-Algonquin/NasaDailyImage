@@ -89,6 +89,8 @@ public class RandomImage extends AppCompatActivity implements NavigationView.OnN
         ImageView imageView = findViewById(R.id.dailyImage);
         ProgressBar progressBar = findViewById(R.id.progressBar);
 
+
+        //Handler get Main UI looper to handle UI manipulation in separate thread
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {

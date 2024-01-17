@@ -107,7 +107,9 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
      */
     public void urlQuery(String u){
 
+        //new thread executor running non-UI thread
         ExecutorService executorService = Executors.newSingleThreadExecutor();
+        //Handler get Main UI looper to handle UI manipulation in separate thread
         Handler handler = new Handler(Looper.getMainLooper());
 
         executorService.execute(() -> {
@@ -141,6 +143,7 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
                 //Send to UI thread
                 handler.post(() -> {
 
+                    //Insert all data into Bundle
                     Bundle activityData = new Bundle();
                     activityData.putString("date", date);
                     activityData.putParcelable("image", image);
@@ -148,6 +151,7 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
                     activityData.putString("url", urlSD);
                     activityData.putString("hdurl", urlHD);
 
+                    //Pass data to display fragment
                     SearchFragment searchFragment = new SearchFragment();
                     searchFragment.setArguments(activityData);
 

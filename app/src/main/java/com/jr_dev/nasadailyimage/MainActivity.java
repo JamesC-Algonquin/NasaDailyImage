@@ -98,9 +98,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     public void urlQuery(String u){
 
+        //new thread executor running non-UI thread
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        //Handler get Main UI looper to handle UI manipulation in separate thread
         Handler handler = new Handler(Looper.getMainLooper());
 
+        //execute web query on non-UI thread
         executor.execute(() -> {
 
             try {
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String text = nasaJSON.getString("explanation");
 
                 handler.post(() -> {
-                    //Set UI image to bitmap from AsyncTask
+                    //Set UI image to bitmap
                     ImageView imageView = findViewById(R.id.dailyImage);
                     imageView.setImageBitmap(image);
                     //Set description to text from JSON Object
