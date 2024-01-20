@@ -3,6 +3,7 @@ package com.jr_dev.nasadailyimage;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -178,6 +179,23 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
 
                 ImageDB dbHelper = new ImageDB(this, ImageDB.dbName, null, ImageDB.dbVersion);
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                //Check Image doesn't already exist
+                Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + ImageDB.tableName + " WHERE " + ImageDB.colDate + "=?", new String[] {date});
+                if (cursor!=null && cursor.getCount() > 0){
+                    cursor.moveToFirst();
+                    int count = cursor.getInt(0);
+
+                    if (count >= 1){
+                        //Handler get Main UI looper to handle UI manipulation in separate thread
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(() -> Toast.makeText(this, getResources().getString(R.string.exists), Toast.LENGTH_SHORT).show());
+                        cursor.close();
+                        return;
+                    }
+                    cursor.close();
+                }
+
 
                 //Save data to SQLite, Image to drive
                 //Insert Values to DB
