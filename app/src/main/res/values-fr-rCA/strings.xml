@@ -28,4 +28,5 @@
     <string name="search_help">Sélectionnez une date pour voir quelle image la NASA a publiée ce jour-là !</string>
     <string name="message">J\'adore les commentaires. Envoyez-moi un message!</string>
     <string name="send">Envoyer</string>
+    <string name="exists">Cette image est déjà enregistrée</string>
 </resources>
