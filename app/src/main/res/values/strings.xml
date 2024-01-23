@@ -27,4 +27,5 @@
     <string name="search_help">Select a date to see what image NASA posted on that day!</string>
     <string name="message">I love feedback. Send me a message!</string>
     <string name="send">Send</string>
+    <string name="exists">This image has already been saved.</string>
 </resources>
