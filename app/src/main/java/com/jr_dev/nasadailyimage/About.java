@@ -1,5 +1,11 @@
 package com.jr_dev.nasadailyimage;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -7,19 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Simple Text-based activity, with a short description of the author
@@ -48,51 +43,6 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        EditText edit = findViewById(R.id.message);
-
-        //Set to saved edit text data
-        SharedPreferences prefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
-        String messaged = prefs.getString("message", "");
-        if (messaged != null && !(messaged.equals(""))){
-            edit.setText(messaged);
-        }
-
-        Button send = findViewById(R.id.send);
-        send.setOnClickListener(click -> {
-
-            //Get Edit text data
-            String message = edit.toString();
-
-            //Build Email intent
-            Intent email = new Intent(Intent.ACTION_SEND);
-            email.setDataAndType(Uri.parse("mailto:"), "text/plain");
-            email.putExtra(Intent.EXTRA_EMAIL, "junkmailnin@gmail.com");
-            email.putExtra(Intent.EXTRA_SUBJECT, "A Message");
-            email.putExtra(Intent.EXTRA_TEXT, message);
-
-            //Attempt email send, snackbar confirms success or failure
-            try {
-                startActivity(Intent.createChooser(email, "Send mail..."));
-                Snackbar.make(send, "Message Sent!", Snackbar.LENGTH_LONG).show();
-            } catch (android.content.ActivityNotFoundException ex) {
-                Snackbar.make(send, "No Email Client Found!", Snackbar.LENGTH_SHORT).show();
-            }
-
-
-        });
-    }
-
-    /**
-     * onPause method saves the edit text  data for the
-     * next time it is opened.
-     */
-    protected void onPause(){
-        super.onPause();
-        SharedPreferences prefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = prefs.edit();
-        EditText editText = findViewById(R.id.message);
-        edit.putString("message", String.valueOf(editText.getText()));
-        edit.apply();
     }
 
     /**Inflates Toolbar
