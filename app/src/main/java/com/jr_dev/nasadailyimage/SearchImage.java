@@ -168,23 +168,15 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
     public void saveImage(){
         if(date == null){
             Toast.makeText(this, getResources().getString(R.string.choose_date), Toast.LENGTH_SHORT).show();
-        }else {
-
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            executorService.execute(() -> {
-
-                ImageDAO imageDAO = new ImageDAO(this);
-
-                if (imageDAO.ifExistsDate(date)){
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(() -> Toast.makeText(this, getResources().getString(R.string.exists), Toast.LENGTH_SHORT).show());
-                    return;
-                }
-
-                imageDAO.insertValues(this, date, urlSD, urlHD, text, image);
-                Log.d("saved to db.", "saved to db");
-
-            });
+        }
+        else {
+            ImageDAO imageDAO = new ImageDAO(this);
+            if (imageDAO.ifExistsDate(date)){
+                Toast.makeText(this, getResources().getString(R.string.exists), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            imageDAO.insertValues( date, urlSD, urlHD, text, image);
+            Log.d("saved to db.", "saved to db");
         }
     }
 
