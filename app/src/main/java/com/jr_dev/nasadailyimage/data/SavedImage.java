@@ -1,4 +1,4 @@
-package com.jr_dev.nasadailyimage;
+package com.jr_dev.nasadailyimage.data;
 
 import android.graphics.Bitmap;
 

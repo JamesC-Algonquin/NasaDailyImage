@@ -1,10 +1,7 @@
-package com.jr_dev.nasadailyimage;
+package com.jr_dev.nasadailyimage.activity;
 
-import android.content.ContentValues;
-import android.content.Context;
+
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,12 +24,14 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.jr_dev.nasadailyimage.data.ImageDAO;
+import com.jr_dev.nasadailyimage.R;
+import com.jr_dev.nasadailyimage.component.SearchFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -172,53 +171,15 @@ public class SearchImage extends AppCompatActivity implements NavigationView.OnN
     public void saveImage(){
         if(date == null){
             Toast.makeText(this, getResources().getString(R.string.choose_date), Toast.LENGTH_SHORT).show();
-        }else {
-
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            executorService.execute(() -> {
-
-                ImageDB dbHelper = new ImageDB(this, ImageDB.dbName, null, ImageDB.dbVersion);
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                //Check Image doesn't already exist
-                Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + ImageDB.tableName + " WHERE " + ImageDB.colDate + "=?", new String[] {date});
-                if (cursor!=null && cursor.getCount() > 0){
-                    cursor.moveToFirst();
-                    int count = cursor.getInt(0);
-
-                    if (count >= 1){
-                        //Handler get Main UI looper to handle UI manipulation in separate thread
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(() -> Toast.makeText(this, getResources().getString(R.string.exists), Toast.LENGTH_SHORT).show());
-                        cursor.close();
-                        return;
-                    }
-                    cursor.close();
-                }
-
-
-                //Save data to SQLite, Image to drive
-                //Insert Values to DB
-                ContentValues cValues = new ContentValues();
-                cValues.put(ImageDB.colDate, date);
-                cValues.put(ImageDB.colUrl, urlSD);
-                cValues.put(ImageDB.colUrlHD, urlHD);
-                cValues.put(ImageDB.colExplain, text);
-                db.insert(ImageDB.tableName, null, cValues);
-                Log.d("saved to db.", "saved to db");
-
-                //Save image to device
-                String path = date + ".png";
-                try {
-                    FileOutputStream outputStream = openFileOutput(path, Context.MODE_PRIVATE);
-                    image.compress(Bitmap.CompressFormat.PNG, 80, outputStream);
-                    outputStream.flush();
-                    outputStream.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        }
+        else {
+            ImageDAO imageDAO = new ImageDAO(this);
+            if (imageDAO.ifExistsDate(date)){
+                Toast.makeText(this, getResources().getString(R.string.exists), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            imageDAO.insertValues( date, urlSD, urlHD, text, image);
+            Log.d("saved to db.", "saved to db");
         }
     }
 

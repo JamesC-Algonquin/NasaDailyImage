@@ -1,4 +1,4 @@
-package com.jr_dev.nasadailyimage;
+package com.jr_dev.nasadailyimage.component;
 
 import android.content.Context;
 import android.text.Html;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.jr_dev.nasadailyimage.R;
+import com.jr_dev.nasadailyimage.data.SavedImage;
 
 import java.util.ArrayList;
 
