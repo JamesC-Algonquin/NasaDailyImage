@@ -1,10 +1,12 @@
-package com.jr_dev.nasadailyimage;
+package com.jr_dev.nasadailyimage.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -15,21 +17,21 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.jr_dev.nasadailyimage.data.ImageDAO;
+import com.jr_dev.nasadailyimage.component.ListAdapter;
+import com.jr_dev.nasadailyimage.R;
 
 /**
- * Simple Text-based activity, with a short description of the author
- * Includes Toolbar and Nav Menu logic
- * Edit Text can be use to send email to author
+ * Activity Displays all Saved Images from Image Search
  *
  * @author James Ching
  */
-public class About extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ListImage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
-
+        setContentView(R.layout.activity_list_image);
         //Set Toolbar in UI
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -43,7 +45,55 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        inflateList();
     }
+
+    /**
+     * Inflates the list from Database entries
+     * Images are stored in files
+     * Delete entries by long press on list
+     *
+     */
+   public void inflateList(){
+       //Get List View and set adapter
+       ListAdapter myListAdapter;
+       myListAdapter = new ListAdapter(this);
+       ListView myList = findViewById(R.id.ListView);
+       myList.setAdapter(myListAdapter);
+
+       ImageDAO imageDAO = new ImageDAO(this);
+       imageDAO.selectAll(myListAdapter);
+
+       //Long Press to delete
+       myList.setOnItemLongClickListener((list, view, position, id) -> {
+           AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+           alertDialogBuilder.setTitle(getResources().getString(R.string.delete))
+                   //Set Prompt Message
+                   .setMessage(getResources().getString(R.string.confirm))
+                   //Set Yes Button
+                   .setPositiveButton(getResources().getString(R.string.yes), (click, arg) -> {
+
+                       //Delete from DB
+                       imageDAO.deleteImage(myListAdapter, position);
+
+                   })
+                   //Set Empty No button
+                   .setNegativeButton(getResources().getString(R.string.no), (click, arg) -> {
+                   });
+           alertDialogBuilder.create().show();
+           return true;
+       });
+
+   }
+
+    /**
+     * Reinflates list after activity is resumed
+     */
+   public void onResume() {
+       super.onResume();
+       //Wipes List and repopulates based on new data
+       inflateList();
+   }
 
     /**Inflates Toolbar
      * @param menu Menu to inflate
@@ -67,7 +117,7 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
         alertDialogBuilder.setTitle(R.string.help)
-                .setMessage(R.string.about_help)
+                .setMessage(R.string.saved_help)
                 .setPositiveButton(R.string.ok, (click, arg) -> {});
         //Show the Alert Menu
         alertDialogBuilder.create().show();
@@ -82,6 +132,7 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
      * @param item Menu Item Selected
      * @return Return
      */
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -99,9 +150,9 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         } else if (itemId == R.id.search) {
             Intent search = new Intent(this, SearchImage.class);
             startActivity(search);
-        } else if (itemId == R.id.saved) {
-            Intent saved = new Intent(this, ListImage.class);
-            startActivity(saved);
+        } else if (itemId == R.id.about) {
+            Intent about = new Intent(this, About.class);
+            startActivity(about);
         }
         return false;
     }

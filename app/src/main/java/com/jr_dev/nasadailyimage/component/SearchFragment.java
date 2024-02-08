@@ -1,4 +1,4 @@
-package com.jr_dev.nasadailyimage;
+package com.jr_dev.nasadailyimage.component;
 
 import android.os.Bundle;
 import android.text.Html;
@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import com.jr_dev.nasadailyimage.R;
 
 /**
  * Fragment for search image activity

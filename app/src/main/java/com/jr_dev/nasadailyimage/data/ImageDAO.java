@@ -1,4 +1,4 @@
-package com.jr_dev.nasadailyimage;
+package com.jr_dev.nasadailyimage.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import com.jr_dev.nasadailyimage.component.ListAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;

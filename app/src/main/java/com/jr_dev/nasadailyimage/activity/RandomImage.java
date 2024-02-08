@@ -1,4 +1,4 @@
-package com.jr_dev.nasadailyimage;
+package com.jr_dev.nasadailyimage.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,6 +22,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.jr_dev.nasadailyimage.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
